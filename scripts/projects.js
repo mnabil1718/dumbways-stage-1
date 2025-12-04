@@ -111,6 +111,7 @@ function onSubmitHandler(e) {
 
 
   const project = { id: crypto.randomUUID(), name, startDate, endDate, description, technology, image };
+  console.log(project);
   store.add(project);
 
   render();
