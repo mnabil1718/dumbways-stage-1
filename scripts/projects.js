@@ -5,6 +5,17 @@ const store = new StoreManager(STORE_NAME);
 const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 
+function attachDeleteHandlers() {
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+
+      store.delete({ id });
+      render();
+    });
+  });
+}
+
 function render() {
   const projects = store.getAll();
 
@@ -54,12 +65,9 @@ function render() {
       `;
     })
     .join("");
+
+  attachDeleteHandlers();
 }
-
-
-
-render();
-
 
 function onSubmitHandler(e) {
   e.preventDefault();
@@ -81,5 +89,10 @@ function onSubmitHandler(e) {
 
   form.reset();
 };
+
+
+
+render();
+
 
 form.addEventListener("submit", onSubmitHandler);
