@@ -12,6 +12,10 @@ class StoreManager {
     return [...this.state];
   }
 
+  getById(id) {
+    return this.state.find((item) => item.id === id);
+  }
+
   add(item) {
     this.state.push(item);
   }
