@@ -6,7 +6,7 @@
 
 body {
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.7;
   font-family: "Poppins", sans-serif;
   color: oklch(37.2% 0.044 257.287);
   background: oklch(92.9% 0.013 255.508);
@@ -173,6 +173,10 @@ box-shadow:
 #contact form {
   max-width: 520px;
   margin: 0 auto;
+}
+
+#not-found {
+  height: 100vh;
 }
 
 

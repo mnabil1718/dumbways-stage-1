@@ -1,4 +1,5 @@
-// TODO: limit number of chars in description for card
+import { dateDelta } from "../utils/date.js";
+
 class ProjectCard extends HTMLElement {
   set project(p) {
     this._project = p;
@@ -11,17 +12,6 @@ class ProjectCard extends HTMLElement {
 
   connectedCallback() {
     this.render();
-  }
-
-  dateDelta(start, end) {
-    const s = new Date(start);
-    const e = new Date(end);
-
-    const ms = e - s;
-    const days = ms / (1000 * 60 * 60 * 24);
-    const months = Math.ceil(days / 30);
-
-    return `${months} bulan`;
   }
 
   render() {
@@ -38,10 +28,10 @@ class ProjectCard extends HTMLElement {
             <img src="${imageUrl}" alt="${project.name}" />
 
             <div class="content">
-              <h2>${project.name}</h2>
+              <a href="/project-detail.html?id=${project.id}"><h2>${project.name}</h2></a>
 
               <span class="text-muted">
-                Durasi: ${this.dateDelta(project.startDate, project.endDate)}
+                Durasi: ${dateDelta(project.startDate, project.endDate)}
               </span>
 
               <p class="mt-4 line-clamp-3">${project.description}</p>
