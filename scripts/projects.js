@@ -8,8 +8,8 @@ const container = document.getElementById("project-list");
 
 
 function render() {
-
   container.innerHTML = "";
+
   const projects = store.getAll();
 
   if (projects.length === 0) {
@@ -17,12 +17,12 @@ function render() {
     return;
   }
 
-  projects.map((p) => {
+  projects.forEach((p) => {
     const card = document.createElement("project-card");
     card.project = p;
 
     card.addEventListener("delete", (e) => {
-      const project = e.project;
+      const project = e.detail;
       store.delete({ id: project.id });
       render();
     });
@@ -45,7 +45,6 @@ function onSubmitHandler(e) {
 
 
   const project = { id: crypto.randomUUID(), name, startDate, endDate, description, technology, image };
-  console.log(project);
   store.add(project);
 
   render();

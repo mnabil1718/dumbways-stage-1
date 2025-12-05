@@ -31,8 +31,8 @@ class ProjectCard extends HTMLElement {
       .map((t) => `<li>${t}</li>`)
       .join("");
 
+    this.classList.add("col-12", "col-md-6", "col-lg-4");
     this.innerHTML = `
-        <div class="col-12 col-md-6 col-lg-4">
           <div class="project-card">
             <img src="${imageUrl}" alt="${project.name}" />
 
@@ -60,15 +60,14 @@ class ProjectCard extends HTMLElement {
               </div>
             </div>
           </div>
-        </div>
       `;
 
     this.querySelector(".edit-btn").addEventListener("click", () => {
-      this.dispatchEvent(new CustomEvent("edit", { project: this._project }));
+      this.dispatchEvent(new CustomEvent("edit", { detail: this._project }));
     });
 
     this.querySelector(".delete-btn").addEventListener("click", () => {
-      this.dispatchEvent(new CustomEvent("delete", { project: this._project }));
+      this.dispatchEvent(new CustomEvent("delete", { detail: this._project }));
     });
   }
 }
