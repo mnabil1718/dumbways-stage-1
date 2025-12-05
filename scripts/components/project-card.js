@@ -1,3 +1,4 @@
+// TODO: limit number of chars in description for card
 class ProjectCard extends HTMLElement {
   set project(p) {
     this._project = p;
@@ -43,7 +44,7 @@ class ProjectCard extends HTMLElement {
                 Durasi: ${this.dateDelta(project.startDate, project.endDate)}
               </span>
 
-              <p class="mt-4">${project.description}</p>
+              <p class="mt-4 line-clamp-3">${project.description}</p>
 
               <ul>
                 ${techs}
