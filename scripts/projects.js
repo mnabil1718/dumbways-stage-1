@@ -127,6 +127,8 @@ async function onSubmitHandler(e) {
   await store.add(project);
 
   render();
+  preview.src = "";
+  preview.classList.remove("has-image");
   form.reset();
 };
 
