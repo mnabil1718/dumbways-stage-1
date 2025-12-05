@@ -23,43 +23,7 @@
     <title>Muhammad Nabil - Profile</title>
   </head>
   <body>
-    <nav
-      class="navbar sticky-top border-bottom navbar-expand-lg bg-body-tertiary"
-    >
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/index.html">
-          <img
-            src="./assets/branded.png"
-            alt="Bootstrap"
-            width="50"
-            height="35"
-        /></a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/index.html"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/projects.html">My Projects</a>
-            </li>
-          </ul>
-          <a href="/contact.html" class="btn btn-dark btn-sm"> Contact Me </a>
-        </div>
-      </div>
-    </nav>
+    <navigation-bar activate="/index.html"></navigation-bar>
 
     <main>
       <div class="card">
@@ -141,6 +105,7 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script type="module" src="/scripts/components/navigation-bar.js"></script>
     <script type="module" src="scripts/index.js"></script>
   </body>
 </html>

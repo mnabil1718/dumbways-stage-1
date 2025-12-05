@@ -1,3 +1,6 @@
+// Using native browser indexedDB
+// for File object storage and more
+// storage capacity.
 class IndexedDBStore {
   constructor(dbName, storeName, versionNumber = 1) {
     this.dbName = dbName;
