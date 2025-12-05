@@ -8,7 +8,6 @@ const store = new IndexedDBStore(DB_NAME, STORE_NAME, VERSION);
 await store.open();
 
 
-
 const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");

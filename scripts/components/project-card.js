@@ -31,9 +31,9 @@ class ProjectCard extends HTMLElement {
       .map((t) => `<li>${t}</li>`)
       .join("");
 
-    this.classList.add("col-12", "col-md-6", "col-lg-4");
+    this.classList.add("col-12", "col-md-6", "col-lg-4", "d-flex");
     this.innerHTML = `
-          <div class="project-card">
+          <div class="project-card h-100">
             <img src="${imageUrl}" alt="${project.name}" />
 
             <div class="content">
