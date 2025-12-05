@@ -20,6 +20,16 @@ class StoreManager {
     this.state.push(item);
   }
 
+  update(item, id) {
+    this.state = this.state.map((i) => {
+      if (i.id === id) {
+        return item;
+      }
+
+      return i;
+    });
+  }
+
   delete(item) {
     const i = this.findIndex(item.id);
 

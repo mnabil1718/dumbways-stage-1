@@ -63,3 +63,13 @@ box-shadow:
   border-radius: 8px;
   padding: 4px 8px;
 }
+
+
+.has-image {
+  display: block;
+  width: 150px;
+  aspect-ratio: 3 / 2;
+  border-radius: 8px;
+  margin-top: 12px;
+  object-fit: cover;
+}
