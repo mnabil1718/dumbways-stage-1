@@ -1,5 +1,6 @@
 import IndexedDBStore from "./index-db.js";
-import { toHumanReadable } from "./utils/date.js";
+import { toHumanReadable, dateDelta } from "./utils/date.js";
+import { fallbackImageUrl } from "./utils/file.js";
 
 const STORE_NAME = "projects";
 const DB_NAME = "projectDB";
@@ -31,7 +32,7 @@ function render(project) {
   document.getElementById('name').textContent = project.name;
 
   const image = document.getElementById("image");
-  image.src = project.image ? URL.createObjectURL(project.image) : '/assets/placeholder.svg';
+  image.src = fallbackImageUrl(project.image);
   image.alt = project.name;
 
   const start = toHumanReadable(project.startDate);

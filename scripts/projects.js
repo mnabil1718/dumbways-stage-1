@@ -83,6 +83,23 @@ function repopulateForm(project) {
   buttonContainer.appendChild(cancelButton);
 }
 
+function validate({ startDate, endDate, technology }) {
+
+  if (new Date(startDate) > new Date(endDate)) {
+    console.error("start date has to be before end date.");
+    alert("start date has to be before end date.");
+    return false;
+  }
+
+  if (technology.length < 1) {
+    console.error("you must choose at least 1 technology.");
+    alert("you must choose at least 1 technology.");
+    return false;
+  }
+
+  return true;
+}
+
 async function onSubmitHandler(e) {
   e.preventDefault();
 
@@ -94,9 +111,18 @@ async function onSubmitHandler(e) {
   const description = data.get('description');
   const technology = data.getAll('technology');
   const image = data.get('image');
+  const project = {
+    id: crypto.randomUUID(),
+    name,
+    startDate,
+    endDate,
+    description,
+    technology,
+    image: image && image.size > 0 ? image : null
+  };
 
+  if (!validate(project)) return;
 
-  const project = { id: crypto.randomUUID(), name, startDate, endDate, description, technology, image };
   await store.add(project);
 
   render();
@@ -114,16 +140,12 @@ async function onSaveHandler(e) {
 
   const data = new FormData(form);
 
-  const name = data.get('name') || project.name;
-  const startDate = data.get('start-date') || project.startDate;
-  const endDate = data.get('end-date') || project.endDate;
-  const description = data.get('description') || project.description;
-
-  const techs = data.getAll('technology');
-  const technology = techs.length > 0 ? techs : project.technology;
-
-  const imageFile = data.get('image');
-  const image = imageFile?.size ? imageFile : project.image;
+  const name = data.get('name');
+  const startDate = data.get('start-date');
+  const endDate = data.get('end-date');
+  const description = data.get('description');
+  const technology = data.getAll('technology');
+  const image = data.get('image');
 
   const updated = {
     id: project.id,
@@ -132,8 +154,10 @@ async function onSaveHandler(e) {
     endDate,
     description,
     technology,
-    image,
+    image: image && image.size > 0 ? image : project.image,
   };
+
+  if (!validate(updated)) return;
 
   await store.update(updated);
 

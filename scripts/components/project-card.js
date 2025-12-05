@@ -1,4 +1,5 @@
 import { dateDelta } from "../utils/date.js";
+import { fallbackImageUrl } from "../utils/file.js";
 
 class ProjectCard extends HTMLElement {
   set project(p) {
@@ -17,7 +18,7 @@ class ProjectCard extends HTMLElement {
   render() {
     if (!this._project) return;
     const project = this._project;
-    const imageUrl = project.image ? URL.createObjectURL(project.image) : "#";
+    const imageUrl = fallbackImageUrl(project.image);
     let techs = project.technology
       .map((t) => `<li>${t}</li>`)
       .join("");

@@ -1,4 +1,5 @@
-export function toHumanReadable(date) {
+export function toHumanReadable(str) {
+  const date = new Date(str);
   const day = date.getDate();
   const year = date.getFullYear();
 
