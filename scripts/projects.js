@@ -12,6 +12,7 @@ const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
+const fileInput = document.getElementById("image"); // for image preview listener
 
 
 
@@ -196,4 +197,16 @@ form.addEventListener("submit", (e) => {
   } else {
     onSubmitHandler(e);
   }
+});
+
+fileInput.addEventListener("change", (e) => {
+  const file = fileInput.files[0];
+  if (!file) {
+    preview.src = "";
+    preview.classList.remove("has-image");
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add("has-image");
 });
