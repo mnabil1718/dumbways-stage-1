@@ -8,6 +8,10 @@ const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function resetEdit() {
   form.reset();
   editingId = null;
@@ -18,35 +22,58 @@ function resetEdit() {
   buttonContainer.innerHTML = `<button type="submit" class="btn btn-dark">Submit</button>`;
 }
 
-function render() {
-  container.innerHTML = "";
+function onDeleteHandler(e) {
+  const project = e.detail;
 
-  const projects = store.getAll();
-
-  if (projects.length === 0) {
-    container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
+  if (project.id === editingId) {
+    console.error("Cannot edit project while editing");
+    alert("Cannot edit project while editing");
     return;
   }
 
-  projects.forEach((p) => {
-    const card = document.createElement("project-card");
-    card.project = p;
+  store.delete({ id: project.id });
+  render();
+}
 
-    card.addEventListener("delete", (e) => {
-      const project = e.detail;
-      store.delete({ id: project.id });
-      render();
-    });
+function onEditHanlder(e) {
+  const project = e.detail;
+  editingId = project.id;
+  repopulateForm(project);
 
+  scrollToTop();
+}
 
-    card.addEventListener("edit", (e) => {
-      const project = e.detail;
-      editingId = project.id;
-      repopulateForm(project);
-    });
-
-    container.appendChild(card);
+function repopulateForm(project) {
+  form.querySelector("[name='name']").value = project.name;
+  form.querySelector("[name='start-date']").value = project.startDate;
+  form.querySelector("[name='end-date']").value = project.endDate;
+  form.querySelector("[name='description']").value = project.description;
+  form.querySelectorAll("input[name='technology']").forEach((checkbox) => {
+    checkbox.checked = project.technology.includes(checkbox.value);
   });
+
+  if (preview && project.image) {
+    preview.src = URL.createObjectURL(project.image);
+    preview.classList.add("has-image");
+  }
+
+  if (!buttonContainer) return;
+  buttonContainer.innerHTML = "";
+
+  const saveButton = document.createElement("button");
+  saveButton.type = "submit";
+  saveButton.className = "btn btn-dark me-2";
+  saveButton.textContent = "Save";
+
+  const cancelButton = document.createElement("cancel-button");
+  cancelButton.id = editingId;
+  cancelButton.addEventListener("cancel", (_) => {
+    resetEdit();
+  });
+
+
+  buttonContainer.appendChild(saveButton);
+  buttonContainer.appendChild(cancelButton);
 }
 
 function onSubmitHandler(e) {
@@ -108,38 +135,25 @@ function onSaveHandler(e) {
   render();
 }
 
+function render() {
+  container.innerHTML = "";
 
-function repopulateForm(project) {
-  form.querySelector("[name='name']").value = project.name;
-  form.querySelector("[name='start-date']").value = project.startDate;
-  form.querySelector("[name='end-date']").value = project.endDate;
-  form.querySelector("[name='description']").value = project.description;
-  form.querySelectorAll("input[name='technology']").forEach((checkbox) => {
-    checkbox.checked = project.technology.includes(checkbox.value);
-  });
+  const projects = store.getAll();
 
-  if (preview && project.image) {
-    preview.src = URL.createObjectURL(project.image);
-    preview.classList.add("has-image");
+  if (projects.length === 0) {
+    container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
+    return;
   }
 
-  if (!buttonContainer) return;
-  buttonContainer.innerHTML = "";
+  projects.forEach((p) => {
+    const card = document.createElement("project-card");
+    card.project = p;
 
-  const saveButton = document.createElement("button");
-  saveButton.type = "submit";
-  saveButton.className = "btn btn-dark me-2";
-  saveButton.textContent = "Save";
+    card.addEventListener("delete", onDeleteHandler);
+    card.addEventListener("edit", onEditHanlder);
 
-  const cancelButton = document.createElement("cancel-button");
-  cancelButton.id = editingId;
-  cancelButton.addEventListener("cancel", (_) => {
-    resetEdit();
+    container.appendChild(card);
   });
-
-
-  buttonContainer.appendChild(saveButton);
-  buttonContainer.appendChild(cancelButton);
 }
 
 render();
