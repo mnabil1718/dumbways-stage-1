@@ -15,7 +15,7 @@ class CancelButton extends HTMLElement {
   render() {
     this.innerHTML = `
           <button class="btn btn-outlined cancel-btn">
-                  Cancel
+            Cancel
           </button>
       `;
 

@@ -1,12 +1,20 @@
-import StoreManager from "./db.js";
+import IndexedDBStore from "./index-db.js";
 
 let editingId = null;
 const STORE_NAME = "projects";
-const store = new StoreManager(STORE_NAME);
+const DB_NAME = "projectDB";
+const VERSION = 1;
+const store = new IndexedDBStore(DB_NAME, STORE_NAME, VERSION);
+await store.open();
+
+
+
 const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
+
+
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -22,7 +30,7 @@ function resetEdit() {
   buttonContainer.innerHTML = `<button type="submit" class="btn btn-dark">Submit</button>`;
 }
 
-function onDeleteHandler(e) {
+async function onDeleteHandler(e) {
   const project = e.detail;
 
   if (project.id === editingId) {
@@ -31,7 +39,7 @@ function onDeleteHandler(e) {
     return;
   }
 
-  store.delete({ id: project.id });
+  await store.delete(project.id);
   render();
 }
 
@@ -76,7 +84,7 @@ function repopulateForm(project) {
   buttonContainer.appendChild(cancelButton);
 }
 
-function onSubmitHandler(e) {
+async function onSubmitHandler(e) {
   e.preventDefault();
 
   const data = new FormData(form);
@@ -90,17 +98,16 @@ function onSubmitHandler(e) {
 
 
   const project = { id: crypto.randomUUID(), name, startDate, endDate, description, technology, image };
-  store.add(project);
+  await store.add(project);
 
   render();
-
   form.reset();
 };
 
-function onSaveHandler(e) {
+async function onSaveHandler(e) {
   e.preventDefault();
 
-  const project = store.getById(editingId);
+  const project = await store.getById(editingId);
   if (!project) {
     console.error("Project not found");
     return;
@@ -129,16 +136,16 @@ function onSaveHandler(e) {
     image,
   };
 
-  store.update(updated, project.id);
+  await store.update(updated);
 
   resetEdit();
   render();
 }
 
-function render() {
+async function render() {
   container.innerHTML = "";
 
-  const projects = store.getAll();
+  const projects = await store.getAll();
 
   if (projects.length === 0) {
     container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
