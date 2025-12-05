@@ -7,21 +7,21 @@ header h1 {
   margin-bottom: 32px;
 }
 
-header #go-back {
+#go-back {
   color: inherit;
   text-decoration: none;
-  position: absolute;
   display: flex;
   align-items: center;
   transition: color 0.2s ease;
 }
 
-header #go-back:hover {
+#go-back:hover {
   color: oklch(70.4% 0.04 256.788);
 }
 
 #hero {
   display: flex;
+  flex-direction: row;
   gap: 2rem;
 }
 
@@ -46,6 +46,25 @@ aside section {
   border-radius: 16px;
   padding: 20px;
 
+}
+
+@media (max-width: 720px) {
+  #go-back {
+    margin-bottom: 40px;
+  }
+
+  #hero {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #hero img {
+  width: 100%;
+  }
+
+  #hero aside {
+    width: 100%;
+  }
 }
 
 #technology ul {

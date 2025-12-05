@@ -41,6 +41,7 @@ class ProjectCard extends HTMLElement {
                 ${techs}
               </ul>
 
+              </div>
               <div class="buttons d-flex gap-2 mt-4">
                 <button class="btn btn-dark w-50 edit-btn">
                   Edit
@@ -50,7 +51,6 @@ class ProjectCard extends HTMLElement {
                   Delete
                 </button>
               </div>
-            </div>
           </div>
       `;
 
