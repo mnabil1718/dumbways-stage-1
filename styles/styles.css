@@ -1,3 +1,7 @@
+:root {
+  --border-color: oklch(86.9% 0.022 252.894);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -43,7 +47,7 @@ h1 {
 .card {
   width: 100%;
   background-color: white;
-  border: 1px solid oklch(86.9% 0.022 252.894);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 64px;
   box-shadow:
@@ -96,7 +100,7 @@ h1 {
 .icon-button {
   padding: 8px 16px;
   border-radius: calc(infinity * 1px);
-  border: 1px solid oklch(86.9% 0.022 252.894);
+  border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -142,7 +146,7 @@ h1 {
 .profile-card {
   max-width: 480px;
   border-radius: 20px;
-  border: 1px solid oklch(86.9% 0.022 252.894);
+  border: 1px solid var(--border-color);
 box-shadow:
   0 1px 12px 1px rgba(0, 0, 0, 0.07),
   0 3px 16px 2px rgba(0, 0, 0, 0.08);
@@ -177,6 +181,41 @@ box-shadow:
 
 #not-found {
   height: 100vh;
+}
+
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  color: oklch(44.8% 0.119 151.328);
+  background-color: oklch(87.1% 0.15 154.449);
+  border: 1px solid oklch(79.2% 0.209 151.711);
+  padding: 12px 20px;
+  padding-right: 12px;
+  border-radius: 8px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: small;
+  box-shadow:
+  0 6px 16px rgba(0, 0, 0, 0.05),
+  0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+#toast button {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(infinity * 1px);
+  color: oklch(62.7% 0.194 149.214);
+  border: none;
+}
+
+#toast button:hover {
+  color: oklch(72.3% 0.219 149.579);
 }
 
 

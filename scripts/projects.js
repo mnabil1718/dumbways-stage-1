@@ -46,6 +46,18 @@ function scrollToSection(id) {
   el.scrollIntoView({ behavior: 'smooth' });
 }
 
+function showToast(message, delay = 3000) {
+  const toastEl = document.getElementById("app-toast");
+  toastEl.querySelector(".toast-body").textContent = message;
+
+  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, {
+    autohide: true,
+    delay
+  });
+
+  toast.show();
+}
+
 function resetEdit() {
   form.reset();
   editingId = null;
@@ -76,8 +88,13 @@ async function onDeleteHandler(e) {
     return;
   }
 
+  if (!confirm(`Are you sure you want to delete project "${project.name}" ?`)) {
+    return;
+  }
+
   await store.delete(project.id);
   await loadProjects();
+  showToast("Project deleted successfully");
   render();
 }
 
@@ -167,6 +184,8 @@ async function onSubmitHandler(e) {
   resetSubmit();
 
   await loadProjects();
+
+  showToast("Project added successfully");
   render();
 }
 
@@ -204,6 +223,8 @@ async function onSaveHandler(e) {
   resetEdit();
 
   await loadProjects();
+
+  showToast("Project updated successfully");
   render();
 }
 
