@@ -23,6 +23,24 @@
   color: oklch(70.4% 0.04 256.788);
 }
 
+
+#search-container {
+  max-width: 520px;
+  margin: 0 auto;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+#search-container input {
+  padding-left: 36px;
+}
+
+#search-container i {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+}
+
 .project-card {
   background-color: white;
   border: 1px solid oklch(86.9% 0.022 252.894);

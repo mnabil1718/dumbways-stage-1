@@ -1,6 +1,8 @@
 import IndexedDBStore from "./index-db.js";
 
 let editingId = null;
+let query = "";
+let projects = [];
 const STORE_NAME = "projects";
 const DB_NAME = "projectDB";
 const VERSION = 1;
@@ -8,26 +10,61 @@ const store = new IndexedDBStore(DB_NAME, STORE_NAME, VERSION);
 await store.open();
 
 
+const search = document.getElementById("search");
 const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
 const fileInput = document.getElementById("image"); // for image preview listener
 
+async function loadProjects() {
+  projects = await store.getAll();
+}
 
+function debounce(fn, delay = 200) {
+  let id;
+  return (...args) => {
+    clearTimeout(id);
+    id = setTimeout(() => fn(...args), delay);
+  };
+}
+
+function revokePreview() {
+  if (preview.src.startsWith("blob:")) {
+    URL.revokeObjectURL(preview.src);
+  }
+}
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+
 function resetEdit() {
   form.reset();
   editingId = null;
+  revokePreview();
   preview.src = "";
   preview.classList.remove("has-image");
 
   // Restore original submit button
   buttonContainer.innerHTML = `<button type="submit" class="btn btn-dark">Submit</button>`;
+
+  scrollToSection('projects');
+}
+
+function resetSubmit() {
+  revokePreview();
+  preview.src = "";
+  preview.classList.remove("has-image");
+  form.reset();
+  scrollToSection('projects');
 }
 
 async function onDeleteHandler(e) {
@@ -40,10 +77,11 @@ async function onDeleteHandler(e) {
   }
 
   await store.delete(project.id);
+  await loadProjects();
   render();
 }
 
-function onEditHanlder(e) {
+function onEditHandler(e) {
   const project = e.detail;
   editingId = project.id;
   repopulateForm(project);
@@ -61,6 +99,7 @@ function repopulateForm(project) {
   });
 
   if (preview && project.image) {
+    revokePreview();
     preview.src = URL.createObjectURL(project.image);
     preview.classList.add("has-image");
   }
@@ -125,11 +164,10 @@ async function onSubmitHandler(e) {
   if (!validate(project)) return;
 
   await store.add(project);
+  resetSubmit();
 
+  await loadProjects();
   render();
-  preview.src = "";
-  preview.classList.remove("has-image");
-  form.reset();
 };
 
 async function onSaveHandler(e) {
@@ -163,32 +201,35 @@ async function onSaveHandler(e) {
   if (!validate(updated)) return;
 
   await store.update(updated);
-
   resetEdit();
+
+  await loadProjects();
   render();
 }
 
 async function render() {
   container.innerHTML = "";
 
-  const projects = await store.getAll();
+  const q = query.toLowerCase();
+  const res = projects.filter(p => p.name.toLowerCase().includes(q));
 
-  if (projects.length === 0) {
+  if (res.length === 0) {
     container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
     return;
   }
 
-  projects.forEach((p) => {
+  res.forEach((p) => {
     const card = document.createElement("project-card");
     card.project = p;
 
     card.addEventListener("delete", onDeleteHandler);
-    card.addEventListener("edit", onEditHanlder);
+    card.addEventListener("edit", onEditHandler);
 
     container.appendChild(card);
   });
 }
 
+await loadProjects();
 render();
 
 
@@ -201,8 +242,11 @@ form.addEventListener("submit", (e) => {
   }
 });
 
-fileInput.addEventListener("change", (e) => {
+fileInput.addEventListener("change", (_) => {
   const file = fileInput.files[0];
+
+  revokePreview();
+
   if (!file) {
     preview.src = "";
     preview.classList.remove("has-image");
@@ -212,3 +256,8 @@ fileInput.addEventListener("change", (e) => {
   preview.src = URL.createObjectURL(file);
   preview.classList.add("has-image");
 });
+
+search.addEventListener("input", debounce((e) => {
+  query = e.target.value.trim();
+  render();
+}, 200));
