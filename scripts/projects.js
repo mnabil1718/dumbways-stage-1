@@ -168,7 +168,7 @@ async function onSubmitHandler(e) {
 
   await loadProjects();
   render();
-};
+}
 
 async function onSaveHandler(e) {
   e.preventDefault();
@@ -218,15 +218,19 @@ async function render() {
     return;
   }
 
-  res.forEach((p) => {
+  // Demo only
+  const cards = res.map((p) => {
     const card = document.createElement("project-card");
     card.project = p;
 
     card.addEventListener("delete", onDeleteHandler);
     card.addEventListener("edit", onEditHandler);
 
-    container.appendChild(card);
+    return card;
   });
+
+
+  container.append(...cards);
 }
 
 await loadProjects();
