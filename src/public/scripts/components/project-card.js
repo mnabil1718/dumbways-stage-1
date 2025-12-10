@@ -29,7 +29,7 @@ class ProjectCard extends HTMLElement {
             <img src="${imageUrl}" alt="${project.name}" />
 
             <div class="content">
-              <a href="/project-detail.html?id=${project.id}"><h2>${project.name}</h2></a>
+              <a href="/project-detail?id=${project.id}"><h2>${project.name}</h2></a>
 
               <span class="text-muted">
                 Durasi: ${dateDelta(project.startDate, project.endDate)}
