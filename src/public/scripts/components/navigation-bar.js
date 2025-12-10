@@ -8,11 +8,11 @@ class NavigationBar extends HTMLElement {
 
     const data = [
       {
-        link: "/index.html",
+        link: "/",
         label: "Home",
       },
       {
-        link: "/projects.html",
+        link: "/projects",
         label: "My Projects",
       },
     ];
@@ -28,9 +28,9 @@ class NavigationBar extends HTMLElement {
     this.classList.add("navbar", "sticky-top", "border-bottom", "navbar-expand-lg", "bg-body-tertiary");
     this.innerHTML = `
       <div class="container-fluid">
-        <a class="navbar-brand" href="/index.html">
+        <a class="navbar-brand" href="/">
           <img
-            src="./assets/branded.png"
+            src="/static/assets/branded.png"
             alt="Bootstrap"
             width="50"
             height="35"
@@ -50,7 +50,7 @@ class NavigationBar extends HTMLElement {
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             ${renderedLinks}
           </ul>
-          <a href="/contact.html" class="btn btn-dark btn-sm"> Contact Me </a>
+          <a href="/contact" class="btn btn-dark btn-sm"> Contact Me </a>
         </div>
       </div>
     `;
