@@ -22,6 +22,9 @@
     "nodemon": "^3.1.11"
   },
   "dependencies": {
+    "auto-bind": "^5.0.1",
+    "better-sqlite3": "^12.5.0",
+    "body-parser": "^2.2.1",
     "express": "^5.2.1",
     "hbs": "^4.2.0"
   }

@@ -9,13 +9,24 @@ const VERSION = 1;
 const store = new IndexedDBStore(DB_NAME, STORE_NAME, VERSION);
 await store.open();
 
-
 const search = document.getElementById("search");
 const form = document.getElementById("project-form");
 const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
 const fileInput = document.getElementById("image"); // for image preview listener
+
+async function request(data, endpoint, method) {
+  const res = await fetch(endpoint, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    console.error("somethings wrong");
+  }
+}
 
 async function loadProjects() {
   projects = await store.getAll();
@@ -43,7 +54,7 @@ function scrollToSection(id) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  el.scrollIntoView({ behavior: 'smooth' });
+  el.scrollIntoView({ behavior: "smooth" });
 }
 
 function showToast(message, delay = 3000) {
@@ -52,7 +63,7 @@ function showToast(message, delay = 3000) {
 
   const toast = bootstrap.Toast.getOrCreateInstance(toastEl, {
     autohide: true,
-    delay
+    delay,
   });
 
   toast.show();
@@ -68,7 +79,7 @@ function resetEdit() {
   // Restore original submit button
   buttonContainer.innerHTML = `<button type="submit" class="btn btn-dark">Submit</button>`;
 
-  scrollToSection('projects');
+  scrollToSection("projects");
 }
 
 function resetSubmit() {
@@ -76,7 +87,7 @@ function resetSubmit() {
   preview.src = "";
   preview.classList.remove("has-image");
   form.reset();
-  scrollToSection('projects');
+  scrollToSection("projects");
 }
 
 async function onDeleteHandler(e) {
@@ -135,13 +146,11 @@ function repopulateForm(project) {
     resetEdit();
   });
 
-
   buttonContainer.appendChild(saveButton);
   buttonContainer.appendChild(cancelButton);
 }
 
 function validate({ startDate, endDate, technology }) {
-
   if (new Date(startDate) > new Date(endDate)) {
     console.error("start date has to be before end date.");
     alert("start date has to be before end date.");
@@ -162,12 +171,12 @@ async function onSubmitHandler(e) {
 
   const data = new FormData(form);
 
-  const name = data.get('name');
-  const startDate = data.get('start-date');
-  const endDate = data.get('end-date');
-  const description = data.get('description');
-  const technology = data.getAll('technology');
-  const image = data.get('image');
+  const name = data.get("name");
+  const startDate = data.get("start-date");
+  const endDate = data.get("end-date");
+  const description = data.get("description");
+  const technology = data.getAll("technology");
+  const image = data.get("image");
   const project = {
     id: crypto.randomUUID(),
     name,
@@ -175,12 +184,13 @@ async function onSubmitHandler(e) {
     endDate,
     description,
     technology,
-    image: image && image.size > 0 ? image : null
+    image: image && image.size > 0 ? image : null,
   };
 
   if (!validate(project)) return;
 
   await store.add(project);
+  await request(project, "/projects", "POST");
   resetSubmit();
 
   await loadProjects();
@@ -200,12 +210,12 @@ async function onSaveHandler(e) {
 
   const data = new FormData(form);
 
-  const name = data.get('name');
-  const startDate = data.get('start-date');
-  const endDate = data.get('end-date');
-  const description = data.get('description');
-  const technology = data.getAll('technology');
-  const image = data.get('image');
+  const name = data.get("name");
+  const startDate = data.get("start-date");
+  const endDate = data.get("end-date");
+  const description = data.get("description");
+  const technology = data.getAll("technology");
+  const image = data.get("image");
 
   const updated = {
     id: project.id,
@@ -232,7 +242,7 @@ async function render() {
   container.innerHTML = "";
 
   const q = query.toLowerCase();
-  const res = projects.filter(p => p.name.toLowerCase().includes(q));
+  const res = projects.filter((p) => p.name.toLowerCase().includes(q));
 
   if (res.length === 0) {
     container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
@@ -250,13 +260,11 @@ async function render() {
     return card;
   });
 
-
   container.append(...cards);
 }
 
 await loadProjects();
 render();
-
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -282,7 +290,10 @@ fileInput.addEventListener("change", (_) => {
   preview.classList.add("has-image");
 });
 
-search.addEventListener("input", debounce((e) => {
-  query = e.target.value.trim();
-  render();
-}, 200));
+search.addEventListener(
+  "input",
+  debounce((e) => {
+    query = e.target.value.trim();
+    render();
+  }, 200),
+);
