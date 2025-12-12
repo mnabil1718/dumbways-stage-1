@@ -5,12 +5,16 @@ import Controller from "./handlers.js";
 import bodyParser from "body-parser";
 import Repository from "./repo.js";
 import { singleImageUploadMiddleware } from "./middlewares.js";
+import { dateDelta, toHumanReadable } from "./public/scripts/utils/date.js";
 
 const app = express();
 const port = 3000;
 const db = initSQLi("projects.db", { verbose: console.log });
 const repo = new Repository(db);
 const controller = new Controller(repo);
+
+hbs.registerHelper("toHumanReadable", toHumanReadable);
+hbs.registerHelper("dateDelta", dateDelta);
 
 app.set("view engine", "html");
 app.engine("html", hbs.__express);
@@ -50,9 +54,7 @@ app.put(
 );
 app.delete("/api/projects/:id", controller.deleteProjectHandler);
 
-app.get("/project-detail", (req, res) => {
-  res.render("project-detail");
-});
+app.get("/projects/:id", controller.getProjectDetailHandler);
 
 // error handler, must be last in the chain
 app.use((err, req, res, next) => {

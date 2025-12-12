@@ -21,7 +21,7 @@
       src="https://kit.fontawesome.com/7265fe3b83.js"
       crossorigin="anonymous"
     ></script>
-    <title>Muhammad Nabil - Project</title>
+	<title>Muhammad Nabil - {{project.name}}</title>
   </head>
   <body>
     <navigation-bar activate="/projects"></navigation-bar>
@@ -33,41 +33,32 @@
         <h1 id="name">Dumbways Web App</h1>
       </header>
       <div id="hero" class="mb-5">
-        <img id="image" src="assets/placeholder.svg" alt="" />
+		<img id="image" src="/static/uploads/{{project.imageUrl}}" alt="{{project.name}}" />
         <aside>
           <section id="duration" class="mb-3">
             <h2>Duration</h2>
             <div class="d-flex align-items-center gap-2 mb-2">
               <span><i class="fa-regular fa-calendar fa-lg"></i></span>
-              <span id="dateRange">11 Feb 2022 - 12 Mar 2024</span>
+			    <span id="dateRange">{{toHumanReadable project.startDate}} - {{toHumanReadable project.endDate}}</span>
             </div>
             <div class="d-flex align-items-center gap-2">
               <span><i class="fa-regular fa-clock fa-lg"></i></span>
-              <span id="dateDuration">1 Month</span>
+			    <span id="dateDuration">{{dateDelta project.startDate project.endDate}}</span>
             </div>
           </section>
           <section id="technology">
             <h2>Technologies</h2>
             <ul id="technology">
-              <li>Next.js</li>
-              <li>Node.js</li>
-              <li>React</li>
-              <li>Typescript</li>
+	      {{#each project.technology}}
+	          <li>{{this}}</li>
+	      {{/each}}
             </ul>
           </section>
         </aside>
       </div>
       <article id="description">
         <p id="description">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.
+	    {{project.description}}
         </p>
       </article>
     </main>
@@ -79,6 +70,5 @@
     <script type="module" src="/static/scripts/components/navigation-bar.js"></script>
     <script type="module" src="/static/scripts/components/project-card.js"></script>
     <script type="module" src="/static/scripts/components/cancel-button.js"></script>
-    <script type="module" src="/static/scripts/project-detail.js"></script>
   </body>
 </html>

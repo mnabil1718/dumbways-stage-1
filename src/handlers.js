@@ -13,7 +13,6 @@ class Controller {
 
   getProjectsHandler(req, res) {
     const projects = this.repo.getAll();
-    console.log(projects);
     res.json({ success: true, data: projects });
   }
 
@@ -82,6 +81,17 @@ class Controller {
 
     this.repo.delete(id);
     res.json({ success: true, message: "Project deleted successfully" });
+  }
+
+  getProjectDetailHandler(req, res) {
+    const { id } = req.params;
+    const project = this.repo.getById(id);
+    if (!project) {
+      // TODO: redirect to 404 page
+      res.status(404).json({ success: false, message: "Project not found" });
+    }
+
+    res.render("project-detail", { project });
   }
 }
 
