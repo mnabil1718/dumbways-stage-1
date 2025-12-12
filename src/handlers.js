@@ -87,11 +87,14 @@ class Controller {
     const { id } = req.params;
     const project = this.repo.getById(id);
     if (!project) {
-      // TODO: redirect to 404 page
-      res.status(404).json({ success: false, message: "Project not found" });
+      res.status(404).render("404");
     }
 
     res.render("project-detail", { project });
+  }
+
+  getProjectsPageHandler(req, res) {
+    res.render("projects");
   }
 }
 

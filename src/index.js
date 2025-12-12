@@ -36,10 +36,7 @@ app.get("/contact", (req, res) => {
   res.render("contact");
 });
 
-app.get("/projects", (req, res) => {
-  res.render("projects");
-});
-
+app.get("/projects", controller.getProjectsPageHandler);
 app.get("/api/projects", controller.getProjectsHandler);
 app.get("/api/projects/:id", controller.getProjectHandler);
 app.post(
@@ -53,8 +50,12 @@ app.put(
   controller.putProjectsHandler,
 );
 app.delete("/api/projects/:id", controller.deleteProjectHandler);
-
 app.get("/projects/:id", controller.getProjectDetailHandler);
+
+// global not found handler
+app.use((req, res) => {
+  res.render("404");
+});
 
 // error handler, must be last in the chain
 app.use((err, req, res, next) => {
@@ -63,5 +64,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Express js application is listening on port ${port}`);
+  console.log(`Express js application is listening on port ${port}...`);
 });
