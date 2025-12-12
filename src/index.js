@@ -1,14 +1,15 @@
 import express from "express";
 import hbs from "hbs";
-import SQLiDB from "./db.js";
+import { initSQLi } from "./db.js";
 import Controller from "./handlers.js";
 import bodyParser from "body-parser";
 import Repository from "./repo.js";
+import { singleImageUploadMiddleware } from "./middlewares.js";
 
 const app = express();
 const port = 3000;
-const db = new SQLiDB("projects.db", { verbose: console.log });
-const repo = new Repository(db.db);
+const db = initSQLi("projects.db", { verbose: console.log });
+const repo = new Repository(db);
 const controller = new Controller(repo);
 
 app.set("view engine", "html");
@@ -35,8 +36,16 @@ app.get("/contact", (req, res) => {
   res.render("contact");
 });
 
-app.get("/projects", controller.getProjectsHandler);
-app.post("/projects", controller.postProjectsHandler);
+app.get("/projects", (req, res) => {
+  res.render("projects");
+});
+
+app.get("/api/projects", controller.getProjectsHandler);
+app.post(
+  "/api/projects",
+  singleImageUploadMiddleware,
+  controller.postProjectsHandler,
+);
 
 app.get("/project-detail", (req, res) => {
   res.render("project-detail");

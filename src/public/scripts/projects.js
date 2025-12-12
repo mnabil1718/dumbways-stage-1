@@ -1,4 +1,6 @@
 import IndexedDBStore from "./index-db.js";
+import API from "./utils/api.js";
+import { getUploadUrl } from "./utils/file.js";
 
 let editingId = null;
 let query = "";
@@ -16,20 +18,12 @@ const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
 const fileInput = document.getElementById("image"); // for image preview listener
 
-async function request(data, endpoint, method) {
-  const res = await fetch(endpoint, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    console.error("somethings wrong");
-  }
+async function loadProjects() {
+  projects = await API.get("/api/projects");
 }
 
-async function loadProjects() {
-  projects = await store.getAll();
+async function getProjectById(id) {
+  return await API.get(`/api/projects/${id}`);
 }
 
 function debounce(fn, delay = 200) {
@@ -126,9 +120,9 @@ function repopulateForm(project) {
     checkbox.checked = project.technology.includes(checkbox.value);
   });
 
-  if (preview && project.image) {
+  if (preview && project.imageUrl) {
     revokePreview();
-    preview.src = URL.createObjectURL(project.image);
+    preview.src = getUploadUrl(project.imageUrl);
     preview.classList.add("has-image");
   }
 
@@ -171,70 +165,54 @@ async function onSubmitHandler(e) {
 
   const data = new FormData(form);
 
-  const name = data.get("name");
-  const startDate = data.get("start-date");
-  const endDate = data.get("end-date");
-  const description = data.get("description");
+  const startDate = data.get("startDate");
+  const endDate = data.get("endDate");
   const technology = data.getAll("technology");
-  const image = data.get("image");
-  const project = {
-    id: crypto.randomUUID(),
-    name,
+  const validateObj = {
     startDate,
     endDate,
-    description,
     technology,
-    image: image && image.size > 0 ? image : null,
   };
 
-  if (!validate(project)) return;
+  if (!validate(validateObj)) return;
 
-  await store.add(project);
-  await request(project, "/projects", "POST");
+  const message = await API.post("/api/projects", data);
   resetSubmit();
 
   await loadProjects();
 
-  showToast("Project added successfully");
+  showToast(message);
   render();
 }
 
 async function onSaveHandler(e) {
   e.preventDefault();
 
-  const project = await store.getById(editingId);
+  const project = await getProjectById(editingId);
   if (!project) {
     console.error("Project not found");
     return;
   }
 
   const data = new FormData(form);
-
-  const name = data.get("name");
-  const startDate = data.get("start-date");
-  const endDate = data.get("end-date");
-  const description = data.get("description");
+  const startDate = data.get("startDate");
+  const endDate = data.get("endDate");
   const technology = data.getAll("technology");
-  const image = data.get("image");
 
-  const updated = {
-    id: project.id,
-    name,
+  const validateObj = {
     startDate,
     endDate,
-    description,
     technology,
-    image: image && image.size > 0 ? image : project.image,
   };
 
-  if (!validate(updated)) return;
+  if (!validate(validateObj)) return;
 
-  await store.update(updated);
+  const message = await API.put(`/api/projects/${project.id}`, data);
   resetEdit();
 
   await loadProjects();
 
-  showToast("Project updated successfully");
+  showToast(message);
   render();
 }
 

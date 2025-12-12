@@ -1,23 +1,23 @@
-import SQLiDB from "./db.js";
+import Database from "better-sqlite3";
+import { projectMapper, singleProjectMapper } from "./helper/mapper.js";
 
 class Repository {
   /**
-   * @param {SQLiDB} db
+   * @param {Database} db
    * */
   constructor(db) {
     this.db = db;
   }
 
   insert(project) {
-    console.log("project", project);
-    const q = this.db
-      .prepare(
-        `
-		    INSERT INTO projects
-		    (id, name, start_date, end_date, description, technology, image)
-		    VALUES (?, ?, ?, ?, ?, ?, ?)
-		`,
-      )
+    const q = `
+	      INSERT INTO projects
+	      (id, name, start_date, end_date, description, technology, imageUrl)
+	      VALUES (?, ?, ?, ?, ?, ?, ?)
+	      `;
+
+    this.db
+      .prepare(q)
       .run(
         project.id,
         project.name,
@@ -25,20 +25,25 @@ class Repository {
         project.endDate,
         project.description,
         project.technology,
-        project.image,
+        project.imageUrl,
       );
-    console.log("insert", q);
   }
 
   getAll() {
-    const rows = this.db
-      .prepare(
-        `
-    SELECT * FROM projects
-`,
-      )
-      .all();
-    console.log("rows", rows);
+    const q = `
+		  SELECT * FROM projects
+		  `;
+
+    const rows = this.db.prepare(q).all();
+    return projectMapper(rows);
+  }
+
+  getById(id) {
+    const q = `
+	      SELECT * FROM projects WHERE id = ?
+	      `;
+    const row = this.db.prepare(q).get(id);
+    return singleProjectMapper(row);
   }
 }
 

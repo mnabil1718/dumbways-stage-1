@@ -1,14 +1,14 @@
 import Database from "better-sqlite3";
 
-class SQLiDB {
-  constructor(filename, opts = undefined) {
-    this.db = new Database(filename, opts);
-    this.db.pragma("journal_mode = WAL"); // performance reason
-    this.createTables();
-  }
+export function initSQLi(filename, opts = undefined) {
+  const db = new Database(filename, opts);
+  db.pragma("journal_mode = WAL"); // concurrency + speed
+  createTables(db);
+  return db;
+}
 
-  createTables() {
-    const q = `
+function createTables(db) {
+  const q = `
 	CREATE TABLE IF NOT EXISTS projects (
 	    id TEXT PRIMARY KEY,
 	    name TEXT NOT NULL,
@@ -16,12 +16,9 @@ class SQLiDB {
 	    end_date TEXT,
 	    description TEXT,
 	    technology TEXT,     
-	    image BLOB          
+	    imageUrl TEXT          
 	);
 	`;
 
-    this.db.prepare(q).run();
-  }
+  db.prepare(q).run();
 }
-
-export default SQLiDB;

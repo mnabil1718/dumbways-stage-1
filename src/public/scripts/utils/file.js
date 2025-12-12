@@ -1,4 +1,7 @@
-export function fallbackImageUrl(file) {
-  return file ? URL.createObjectURL(file) : "/static/assets/placeholder.svg";
+export function fallbackImageUrl(url) {
+  return url ? getUploadUrl(url) : "/static/assets/placeholder.svg";
 }
 
+export function getUploadUrl(url) {
+  return `/static/upload/${url}`;
+}
