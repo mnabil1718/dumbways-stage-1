@@ -26,6 +26,10 @@ async function getProjectById(id) {
   return await API.get(`/api/projects/${id}`);
 }
 
+async function deleteProjectById(id) {
+  return await API.delete(`/api/projects/${id}`);
+}
+
 function debounce(fn, delay = 200) {
   let id;
   return (...args) => {
@@ -97,9 +101,9 @@ async function onDeleteHandler(e) {
     return;
   }
 
-  await store.delete(project.id);
+  const message = await deleteProjectById(project.id);
   await loadProjects();
-  showToast("Project deleted successfully");
+  showToast(message);
   render();
 }
 
@@ -113,8 +117,8 @@ function onEditHandler(e) {
 
 function repopulateForm(project) {
   form.querySelector("[name='name']").value = project.name;
-  form.querySelector("[name='start-date']").value = project.startDate;
-  form.querySelector("[name='end-date']").value = project.endDate;
+  form.querySelector("[name='startDate']").value = project.startDate;
+  form.querySelector("[name='endDate']").value = project.endDate;
   form.querySelector("[name='description']").value = project.description;
   form.querySelectorAll("input[name='technology']").forEach((checkbox) => {
     checkbox.checked = project.technology.includes(checkbox.value);

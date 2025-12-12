@@ -24,10 +24,6 @@ app.use(bodyParser.urlencoded());
 // parse application/json
 app.use(bodyParser.json());
 
-app.get("/hello", (req, res) => {
-  res.send("Hello World");
-});
-
 app.get("/", (req, res) => {
   res.render("index");
 });
@@ -41,11 +37,18 @@ app.get("/projects", (req, res) => {
 });
 
 app.get("/api/projects", controller.getProjectsHandler);
+app.get("/api/projects/:id", controller.getProjectHandler);
 app.post(
   "/api/projects",
   singleImageUploadMiddleware,
   controller.postProjectsHandler,
 );
+app.put(
+  "/api/projects/:id",
+  singleImageUploadMiddleware,
+  controller.putProjectsHandler,
+);
+app.delete("/api/projects/:id", controller.deleteProjectHandler);
 
 app.get("/project-detail", (req, res) => {
   res.render("project-detail");
@@ -54,7 +57,7 @@ app.get("/project-detail", (req, res) => {
 // error handler, must be last in the chain
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send("Internal Server Error. Something went wrong");
 });
 
 app.listen(port, () => {

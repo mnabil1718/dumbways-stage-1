@@ -65,6 +65,27 @@ class API {
       return json.message;
     }
   }
+
+  /***
+   *
+   * @param {string} endpoint
+   * @returns {any}
+   */
+  static async delete(endpoint) {
+    const res = await fetch(endpoint, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      console.error("DELETE request failed");
+      return;
+    }
+
+    const json = await res.json();
+    if (json.message) {
+      return json.message;
+    }
+  }
 }
 
 export default API;

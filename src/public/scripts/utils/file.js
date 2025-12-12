@@ -3,5 +3,5 @@ export function fallbackImageUrl(url) {
 }
 
 export function getUploadUrl(url) {
-  return `/static/upload/${url}`;
+  return `/static/uploads/${url}`;
 }
