@@ -1,6 +1,12 @@
 import IndexedDBStore from "./index-db.js";
-import API from "./utils/api.js";
 import { getUploadUrl } from "./utils/file.js";
+import {
+  loadProjects,
+  postProject,
+  putProject,
+  getProjectById,
+  deleteProjectById,
+} from "./utils/project-service.js";
 
 let editingId = null;
 let query = "";
@@ -17,18 +23,6 @@ const container = document.getElementById("project-list");
 const buttonContainer = document.getElementById("action-container");
 const preview = document.getElementById("image-preview"); // for edit
 const fileInput = document.getElementById("image"); // for image preview listener
-
-async function loadProjects() {
-  projects = await API.get("/api/projects");
-}
-
-async function getProjectById(id) {
-  return await API.get(`/api/projects/${id}`);
-}
-
-async function deleteProjectById(id) {
-  return await API.delete(`/api/projects/${id}`);
-}
 
 function debounce(fn, delay = 200) {
   let id;
@@ -180,7 +174,7 @@ async function onSubmitHandler(e) {
 
   if (!validate(validateObj)) return;
 
-  const message = await API.post("/api/projects", data);
+  const message = await postProject(data);
   resetSubmit();
 
   await loadProjects();
@@ -211,7 +205,7 @@ async function onSaveHandler(e) {
 
   if (!validate(validateObj)) return;
 
-  const message = await API.put(`/api/projects/${project.id}`, data);
+  const message = await putProject(project.id, data);
   resetEdit();
 
   await loadProjects();
