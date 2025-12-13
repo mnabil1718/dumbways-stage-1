@@ -1,4 +1,3 @@
-import IndexedDBStore from "./index-db.js";
 import { getUploadUrl } from "./utils/file.js";
 import {
   loadProjects,
@@ -8,14 +7,9 @@ import {
   deleteProjectById,
 } from "./utils/project-service.js";
 
-let editingId = null;
-let query = "";
-let projects = [];
-const STORE_NAME = "projects";
-const DB_NAME = "projectDB";
-const VERSION = 1;
-const store = new IndexedDBStore(DB_NAME, STORE_NAME, VERSION);
-await store.open();
+let _editingId = null;
+let _query = "";
+let _projects = [];
 
 const search = document.getElementById("search");
 const form = document.getElementById("project-form");
@@ -63,7 +57,7 @@ function showToast(message, delay = 3000) {
 
 function resetEdit() {
   form.reset();
-  editingId = null;
+  _editingId = null;
   revokePreview();
   preview.src = "";
   preview.classList.remove("has-image");
@@ -85,7 +79,7 @@ function resetSubmit() {
 async function onDeleteHandler(e) {
   const project = e.detail;
 
-  if (project.id === editingId) {
+  if (project.id === _editingId) {
     console.error("Cannot edit project while editing");
     alert("Cannot edit project while editing");
     return;
@@ -96,14 +90,14 @@ async function onDeleteHandler(e) {
   }
 
   const message = await deleteProjectById(project.id);
-  await loadProjects();
+  _projects = await loadProjects();
   showToast(message);
   render();
 }
 
 function onEditHandler(e) {
   const project = e.detail;
-  editingId = project.id;
+  _editingId = project.id;
   repopulateForm(project);
 
   scrollToTop();
@@ -133,7 +127,7 @@ function repopulateForm(project) {
   saveButton.textContent = "Save";
 
   const cancelButton = document.createElement("cancel-button");
-  cancelButton.id = editingId;
+  cancelButton.id = _editingId;
   cancelButton.addEventListener("cancel", (_) => {
     resetEdit();
   });
@@ -177,7 +171,7 @@ async function onSubmitHandler(e) {
   const message = await postProject(data);
   resetSubmit();
 
-  await loadProjects();
+  _projects = await loadProjects();
 
   showToast(message);
   render();
@@ -186,7 +180,7 @@ async function onSubmitHandler(e) {
 async function onSaveHandler(e) {
   e.preventDefault();
 
-  const project = await getProjectById(editingId);
+  const project = await getProjectById(_editingId);
   if (!project) {
     console.error("Project not found");
     return;
@@ -208,7 +202,7 @@ async function onSaveHandler(e) {
   const message = await putProject(project.id, data);
   resetEdit();
 
-  await loadProjects();
+  _projects = await loadProjects();
 
   showToast(message);
   render();
@@ -217,8 +211,8 @@ async function onSaveHandler(e) {
 async function render() {
   container.innerHTML = "";
 
-  const q = query.toLowerCase();
-  const res = projects.filter((p) => p.name.toLowerCase().includes(q));
+  const q = _query.toLowerCase();
+  const res = _projects.filter((p) => p.name.toLowerCase().includes(q));
 
   if (res.length === 0) {
     container.innerHTML = `<p class="empty-text">No projects yet.</p>`;
@@ -239,12 +233,12 @@ async function render() {
   container.append(...cards);
 }
 
-await loadProjects();
+_projects = await loadProjects();
 render();
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (editingId) {
+  if (_editingId) {
     onSaveHandler(e);
   } else {
     onSubmitHandler(e);
@@ -269,7 +263,7 @@ fileInput.addEventListener("change", (_) => {
 search.addEventListener(
   "input",
   debounce((e) => {
-    query = e.target.value.trim();
+    _query = e.target.value.trim();
     render();
   }, 200),
 );

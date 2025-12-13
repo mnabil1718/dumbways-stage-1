@@ -1,7 +1,7 @@
 import autoBind from "auto-bind";
-import Repository from "./repo.js";
+import Repository from "../repo.js";
 
-class Controller {
+class ApiController {
   /***
    *
    * @param {Repository} repo
@@ -82,20 +82,6 @@ class Controller {
     this.repo.delete(id);
     res.json({ success: true, message: "Project deleted successfully" });
   }
-
-  getProjectDetailHandler(req, res) {
-    const { id } = req.params;
-    const project = this.repo.getById(id);
-    if (!project) {
-      res.status(404).render("404");
-    }
-
-    res.render("project-detail", { project });
-  }
-
-  getProjectsPageHandler(req, res) {
-    res.render("projects");
-  }
 }
 
-export default Controller;
+export default ApiController;

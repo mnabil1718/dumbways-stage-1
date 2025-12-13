@@ -1,7 +1,7 @@
 import API from "./api.js";
 
 export async function loadProjects() {
-  projects = await API.get("/api/projects");
+  return await API.get("/api/projects");
 }
 
 export async function getProjectById(id) {

@@ -1,17 +1,21 @@
 import express from "express";
 import hbs from "hbs";
 import { initSQLi } from "./db.js";
-import Controller from "./handlers.js";
+import ApiController from "./controllers/api-controller.js";
 import bodyParser from "body-parser";
 import Repository from "./repo.js";
 import { singleImageUploadMiddleware } from "./middlewares.js";
 import { dateDelta, toHumanReadable } from "./public/scripts/utils/date.js";
+import PageController from "./controllers/page-controller.js";
+import { registerPageRoutes } from "./routes/page-routes.js";
+import { registerAPIRoutes } from "./routes/api-routes.js";
 
 const app = express();
 const port = 3000;
 const db = initSQLi("projects.db", { verbose: console.log });
 const repo = new Repository(db);
-const controller = new Controller(repo);
+const apiController = new ApiController(repo);
+const pageController = new PageController(repo);
 
 hbs.registerHelper("toHumanReadable", toHumanReadable);
 hbs.registerHelper("dateDelta", dateDelta);
@@ -28,29 +32,9 @@ app.use(bodyParser.urlencoded());
 // parse application/json
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
+app.use("/", registerPageRoutes(pageController));
 
-app.get("/contact", (req, res) => {
-  res.render("contact");
-});
-
-app.get("/projects", controller.getProjectsPageHandler);
-app.get("/api/projects", controller.getProjectsHandler);
-app.get("/api/projects/:id", controller.getProjectHandler);
-app.post(
-  "/api/projects",
-  singleImageUploadMiddleware,
-  controller.postProjectsHandler,
-);
-app.put(
-  "/api/projects/:id",
-  singleImageUploadMiddleware,
-  controller.putProjectsHandler,
-);
-app.delete("/api/projects/:id", controller.deleteProjectHandler);
-app.get("/projects/:id", controller.getProjectDetailHandler);
+app.use("/api", registerAPIRoutes(apiController));
 
 // global not found handler
 app.use((req, res) => {
