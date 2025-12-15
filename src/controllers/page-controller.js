@@ -1,12 +1,7 @@
 import autoBind from "auto-bind";
 
 class PageController {
-  /***
-   *
-   * @param {Repository} repo
-   */
-  constructor(repo) {
-    this.repo = repo;
+  constructor() {
     autoBind(this);
   }
 
@@ -16,20 +11,6 @@ class PageController {
 
   getContactPageHandler(req, res) {
     res.render("contact");
-  }
-
-  getProjectsPageHandler(req, res) {
-    res.render("projects");
-  }
-
-  getProjectDetailPageHandler(req, res) {
-    const { id } = req.params;
-    const project = this.repo.getById(id);
-    if (!project) {
-      res.status(404).render("404");
-    }
-
-    res.render("project-detail", { project });
   }
 }
 

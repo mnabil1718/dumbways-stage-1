@@ -1,22 +1,39 @@
 import autoBind from "auto-bind";
-import Repository from "../repo.js";
+import ProjectRepository from "../repositories/abstract/project-repository.js";
+import TechnologyRepository from "../repositories/abstract/technology-repository.js";
 
-class ApiController {
+class ProjectController {
   /***
-   *
-   * @param {Repository} repo
+   * @param {ProjectRepository} projectRepository
+   * @param {TechnologyRepository} technologyRepository
    */
-  constructor(repo) {
-    this.repo = repo;
+  constructor(projectRepository, technologyRepository) {
+    this.projectRepository = projectRepository;
+    this.technologyRepository = technologyRepository;
     autoBind(this);
   }
 
-  getProjectsHandler(req, res) {
-    const projects = this.repo.getAll();
+  async getProjectsPageHandler(req, res) {
+    const technologies = await this.technologyRepository.getAll();
+    res.render("projects", { technologies });
+  }
+
+  async getProjectDetailPageHandler(req, res) {
+    const { id } = req.params;
+    const project = await this.projectRepository.getById(id);
+    if (!project) {
+      res.status(404).render("404");
+    }
+
+    res.render("project-detail", { project });
+  }
+
+  async getProjectsHandler(req, res) {
+    const projects = await this.projectRepository.getAll();
     res.json({ success: true, data: projects });
   }
 
-  postProjectsHandler(req, res) {
+  async postProjectsHandler(req, res) {
     const project = req.body;
     const image = req.file;
     const technologyArray = Array.isArray(project.technology)
@@ -29,16 +46,16 @@ class ApiController {
       startDate: project.startDate,
       endDate: project.endDate,
       description: project.description,
-      technology: JSON.stringify(technologyArray),
+      technologies: technologyArray,
       imageUrl: image?.filename ?? null,
     };
-    this.repo.insert(data);
+    await this.projectRepository.insert(data);
     res.json({ success: true, message: "Project added successfully" });
   }
 
-  getProjectHandler(req, res) {
+  async getProjectHandler(req, res) {
     const { id } = req.params;
-    const project = this.repo.getById(id);
+    const project = await this.projectRepository.getById(id);
     if (!project) {
       res.status(404).json({ success: false, message: "Project not found" });
     }
@@ -46,9 +63,9 @@ class ApiController {
     res.json({ success: true, data: project });
   }
 
-  putProjectsHandler(req, res) {
+  async putProjectsHandler(req, res) {
     const { id } = req.params;
-    const project = this.repo.getById(id);
+    const project = await this.projectRepository.getById(id);
     if (!project) {
       res.status(404).json({ success: false, message: "Project not found" });
     }
@@ -65,23 +82,23 @@ class ApiController {
       startDate: updated.startDate,
       endDate: updated.endDate,
       description: updated.description,
-      technology: JSON.stringify(technologyArray),
+      technologies: technologyArray,
       imageUrl: image?.filename ?? project.imageUrl,
     };
-    this.repo.update(data);
+    await this.projectRepository.update(data);
     res.json({ success: true, message: "Project updated successfully" });
   }
 
-  deleteProjectHandler(req, res) {
+  async deleteProjectHandler(req, res) {
     const { id } = req.params;
-    const project = this.repo.getById(id);
+    const project = await this.projectRepository.getById(id);
     if (!project) {
       res.status(404).json({ success: false, message: "Project not found" });
     }
 
-    this.repo.delete(id);
+    await this.projectRepository.delete(id);
     res.json({ success: true, message: "Project deleted successfully" });
   }
 }
 
-export default ApiController;
+export default ProjectController;

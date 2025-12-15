@@ -19,7 +19,7 @@ class ProjectCard extends HTMLElement {
     if (!this._project) return;
     const project = this._project;
     const imageUrl = fallbackImageUrl(project.imageUrl);
-    let techs = project.technology.map((t) => `<li>${t}</li>`).join("");
+    let techs = project.technology.map((t) => `<li>${t.name}</li>`).join("");
 
     this.classList.add("col-12", "col-md-6", "col-lg-4", "d-flex");
     this.innerHTML = `

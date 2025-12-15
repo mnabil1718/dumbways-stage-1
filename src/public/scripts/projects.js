@@ -109,7 +109,9 @@ function repopulateForm(project) {
   form.querySelector("[name='endDate']").value = project.endDate;
   form.querySelector("[name='description']").value = project.description;
   form.querySelectorAll("input[name='technology']").forEach((checkbox) => {
-    checkbox.checked = project.technology.includes(checkbox.value);
+    checkbox.checked = project.technology.some(
+      (tech) => tech.id === Number(checkbox.value),
+    );
   });
 
   if (preview && project.imageUrl) {

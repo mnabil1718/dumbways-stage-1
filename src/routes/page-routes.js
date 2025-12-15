@@ -11,9 +11,5 @@ export function registerPageRoutes(controller) {
 
   router.get("/contact", controller.getContactPageHandler);
 
-  router.get("/projects", controller.getProjectsPageHandler);
-
-  router.get("/projects/:id", controller.getProjectDetailPageHandler);
-
   return router;
 }

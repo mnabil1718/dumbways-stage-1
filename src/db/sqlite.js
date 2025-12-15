@@ -1,5 +1,8 @@
 import Database from "better-sqlite3";
 
+/**
+ * @returns {import("better-sqlite3").Database} db
+ */
 export function initSQLi(filename, opts = undefined) {
   const db = new Database(filename, opts);
   db.pragma("journal_mode = WAL"); // concurrency + speed

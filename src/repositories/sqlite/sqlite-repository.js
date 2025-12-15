@@ -1,11 +1,13 @@
 import Database from "better-sqlite3";
-import { projectMapper, singleProjectMapper } from "./helper/mapper.js";
+import { projectMapper, singleProjectMapper } from "../../helper/mapper.js";
+import ProjectRepository from "../abstract/project-repository.js";
 
-class Repository {
+class Repository extends ProjectRepository {
   /**
-   * @param {Database} db
+   * @param {import("better-sqlite3").Database} db
    * */
   constructor(db) {
+    super();
     this.db = db;
   }
 

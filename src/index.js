@@ -1,24 +1,36 @@
 import express from "express";
+import "dotenv/config";
 import hbs from "hbs";
-import { initSQLi } from "./db.js";
-import ApiController from "./controllers/api-controller.js";
 import bodyParser from "body-parser";
-import Repository from "./repo.js";
+import Repository from "./repositories/sqlite/sqlite-repository.js";
 import { singleImageUploadMiddleware } from "./middlewares.js";
 import { dateDelta, toHumanReadable } from "./public/scripts/utils/date.js";
 import PageController from "./controllers/page-controller.js";
 import { registerPageRoutes } from "./routes/page-routes.js";
-import { registerAPIRoutes } from "./routes/api-routes.js";
+import { registerRoutes } from "./routes/index.js";
+import { getPool } from "./db/postgresql.js";
+import ProjectController from "./controllers/project-controller.js";
+import { config } from "./helper/config.js";
+import ProjectRepositoryPostgresql from "./repositories/postgresql/project-repository.js";
+import TechnologyRepositoryPostgresql from "./repositories/postgresql/technology-repository.js";
+import TechnologyController from "./controllers/technology-controller.js";
+import { fallbackImageUrl } from "./helper/file.js";
 
 const app = express();
-const port = 3000;
-const db = initSQLi("projects.db", { verbose: console.log });
-const repo = new Repository(db);
-const apiController = new ApiController(repo);
-const pageController = new PageController(repo);
+const pool = getPool();
+
+const projectRepository = new ProjectRepositoryPostgresql(pool);
+const technologyRepository = new TechnologyRepositoryPostgresql(pool);
+const technologyController = new TechnologyController(technologyRepository);
+const projectController = new ProjectController(
+  projectRepository,
+  technologyRepository,
+);
+const pageController = new PageController();
 
 hbs.registerHelper("toHumanReadable", toHumanReadable);
 hbs.registerHelper("dateDelta", dateDelta);
+hbs.registerHelper("fallbackImageUrl", fallbackImageUrl);
 
 app.set("view engine", "html");
 app.engine("html", hbs.__express);
@@ -32,9 +44,10 @@ app.use(bodyParser.urlencoded());
 // parse application/json
 app.use(bodyParser.json());
 
-app.use("/", registerPageRoutes(pageController));
-
-app.use("/api", registerAPIRoutes(apiController));
+app.use(
+  "/",
+  registerRoutes(pageController, projectController, technologyController),
+);
 
 // global not found handler
 app.use((req, res) => {
@@ -47,6 +60,6 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error. Something went wrong");
 });
 
-app.listen(port, () => {
-  console.log(`Express js application is listening on port ${port}...`);
+app.listen(config.port, () => {
+  console.log(`Express js application is listening on port ${config.port}...`);
 });
