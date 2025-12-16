@@ -17,7 +17,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon src/index.js",
-    "migrate": "node-pg-migrate"
+    "migrate": "node-pg-migrate",
+    "seed": "node ./seeder/technology-seeder.js"
   },
   "devDependencies": {
     "node-pg-migrate": "^8.0.4",
