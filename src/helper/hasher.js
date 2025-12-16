@@ -1,7 +1,7 @@
 class Hasher {
   constructor(bcrypt, salt) {
     this._bcrypt = bcrypt;
-    this._salt = salt;
+    this._salt = Number(salt);
   }
 
   async hash(password) {
@@ -10,8 +10,7 @@ class Hasher {
 
   async compare(password, hashedPassword) {
     const res = await this._bcrypt.compare(password, hashedPassword);
-
-    if (!result) {
+    if (!res) {
       throw new Error("invalid credentials");
     }
   }

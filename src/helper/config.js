@@ -3,6 +3,11 @@ export const config = {
   salt: process.env.SALT,
   session: {
     secret: process.env.SESSION_SECRET,
+    errorFlashKey: "error",
+    successFlashKey: "success",
+  },
+  cookie: {
+    secret: process.env.COOKIE_SECRET,
   },
   pg: {
     pguser: process.env.PGUSER,

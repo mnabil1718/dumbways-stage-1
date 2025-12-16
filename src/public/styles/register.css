@@ -1,0 +1,32 @@
+
+
+.card-register {
+    margin: 0 auto;
+  width: 100%; 
+    max-width: 440px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 64px 32px;
+}
+
+@media (max-width: 992px) {
+  .card {
+    padding: 32px;
+  }
+}
+
+#register form {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#login-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+

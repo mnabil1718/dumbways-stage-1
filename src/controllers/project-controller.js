@@ -1,6 +1,7 @@
 import autoBind from "auto-bind";
 import ProjectRepository from "../repositories/abstract/project-repository.js";
 import TechnologyRepository from "../repositories/abstract/technology-repository.js";
+import { navItems } from "../helper/nav-data.js";
 
 class ProjectController {
   /***
@@ -15,7 +16,7 @@ class ProjectController {
 
   async getProjectsPageHandler(req, res) {
     const technologies = await this.technologyRepository.getAll();
-    res.render("projects", { technologies });
+    res.render("projects", { technologies, navItems, active: "/projects" });
   }
 
   async getProjectDetailPageHandler(req, res) {
@@ -25,7 +26,7 @@ class ProjectController {
       res.status(404).render("404");
     }
 
-    res.render("project-detail", { project });
+    res.render("project-detail", { project, navItems, active: "/projects" });
   }
 
   async getProjectsHandler(req, res) {

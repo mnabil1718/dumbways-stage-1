@@ -15,17 +15,29 @@ class NavigationBar extends HTMLElement {
         link: "/projects",
         label: "My Projects",
       },
+      {
+        link: "/contact",
+        label: "Contact Me",
+      },
     ];
 
-    const renderedLinks = data.map((nav) => {
-      return `
+    const renderedLinks = data
+      .map((nav) => {
+        return `
         <li class="nav-item">
-          <a class="nav-link ${nav.link === activate ? 'active' : ''}" href="${nav.link}">${nav.label}</a>
+          <a class="nav-link ${nav.link === activate ? "active" : ""}" href="${nav.link}">${nav.label}</a>
         </li>
       `;
-    }).join("");
+      })
+      .join("");
 
-    this.classList.add("navbar", "sticky-top", "border-bottom", "navbar-expand-lg", "bg-body-tertiary");
+    this.classList.add(
+      "navbar",
+      "sticky-top",
+      "border-bottom",
+      "navbar-expand-lg",
+      "bg-body-tertiary",
+    );
     this.innerHTML = `
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
@@ -50,7 +62,7 @@ class NavigationBar extends HTMLElement {
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             ${renderedLinks}
           </ul>
-          <a href="/contact" class="btn btn-dark btn-sm"> Contact Me </a>
+          <a href="/login" class="btn btn-dark btn-sm"> Login </a>
         </div>
       </div>
     `;

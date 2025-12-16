@@ -18,6 +18,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/static/styles/styles.css" />
+    <link rel="stylesheet" href="/static/styles/register.css" />
     <script
       src="https://kit.fontawesome.com/7265fe3b83.js"
       crossorigin="anonymous"
@@ -25,14 +26,15 @@
     <title>Muhammad Nabil - Register</title>
   </head>
   <body>
-    <navigation-bar></navigation-bar>
+	{{> navbar}}
     <main>
-      <div class="card">
+	          <div class="card-register">
+		{{> flash}}
         <section id="title" class="mb-4">
-          <h1>Get in Touch</h1>
+          <h1>Sign up your account</h1>
         </section>
-        <section id="contact">
-          <form>
+        <section id="register">
+          <form action="/api/register" method="POST">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
               <input
@@ -40,7 +42,7 @@
                 class="form-control"
                 id="name"
                 name="name"
-                placeholder="Ex: Muhammad Nabil"
+                placeholder="Enter your name"
               />
             </div>
             <div class="mb-3">
@@ -54,39 +56,35 @@
               />
             </div>
             <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
+              <label for="password" class="form-label">Password</label>
               <input
-                type="phone"
+                type="password"
                 class="form-control"
-                id="phone"
-                name="phone"
-                placeholder="Ex: +62-878-xxxx-xxxx"
+                id="password"
+                name="password"
+		placeholder="Enter your password"
               />
             </div>
 
-            <div class="mb-3">
-              <label for="subject" class="form-label">Subject</label>
-              <select class="form-select" name="subject" id="subject">
-                <option value="Business Inquiries">Business Inquiries</option>
-                <option value="IT Consultation">IT Consultation</option>
-                <option value="Curhat">Curhat</option>
-              </select>
-            </div>
 
             <div class="mb-3">
-              <label for="message" class="form-label">Your Message</label>
-              <textarea
+              <label for="password_confirmation" class="form-label">Password Confirmation</label>
+              <input
+                type="password"
                 class="form-control"
-                placeholder="Leave a comment here"
-                id="message"
-                name="message"
-                style="height: 150px"
-              ></textarea>
+                id="password_confirmation"
+                name="password_confirmation"
+		placeholder="Enter your password again"
+              />
             </div>
 
-            <div class="d-flex justify-content-end">
-              <button type="submit" class="btn btn-dark">Submit</button>
-            </div>
+
+
+              <button type="submit" class="block w-100 btn btn-dark mb-3">Register</button>
+			<div class="d-flex justify-content-center">
+              <a id="login-link" href="/login" class="text-muted">Have an account? login here</a>
+			</div>
+
           </form>
         </section>
       </div>
@@ -96,6 +94,5 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="/static/scripts/components/navigation-bar.js"></script>
   </body>
 </html>

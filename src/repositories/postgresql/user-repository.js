@@ -8,11 +8,11 @@ class UserRepositoryPostgresql {
     this._pool = pool;
   }
 
-  async insert({ name, email, password }) {
+  async insert({ name, email, hashedPassword }) {
     const id = crypto.randomUUID();
     const q = {
       text: `INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4)`,
-      values: [id, name, email, password],
+      values: [id, name, email, hashedPassword],
     };
 
     const res = await this._pool.query(q);
@@ -30,7 +30,7 @@ class UserRepositoryPostgresql {
 
     const res = await this._pool.query(q);
 
-    if (res.rowCount) {
+    if (!res.rowCount) {
       throw new Error("User not found");
     }
 

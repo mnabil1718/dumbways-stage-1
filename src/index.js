@@ -1,4 +1,8 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import "dotenv/config";
 import hbs from "hbs";
 import bodyParser from "body-parser";
@@ -20,6 +24,8 @@ import Hasher from "./helper/hasher.js";
 import bcrypt from "bcrypt";
 import AuthController from "./controllers/auth-controller.js";
 import UserRepositoryPostgresql from "./repositories/postgresql/user-repository.js";
+import cookieParser from "cookie-parser";
+import flash from "express-flash";
 
 const app = express();
 const pool = getPool();
@@ -40,7 +46,18 @@ const authController = new AuthController(userRepository, passwordHasher);
 hbs.registerHelper("dateDelta", dateDelta);
 hbs.registerHelper("toHumanReadable", toHumanReadable);
 hbs.registerHelper("fallbackImageUrl", fallbackImageUrl);
-hbs.registerPartials("src/views/partials");
+hbs.registerHelper("ifEqual", function (a, b, options) {
+  return a === b ? options.fn(this) : options.inverse(this);
+});
+hbs.registerPartials(path.join(__dirname, "views", "partials"));
+
+app.set("view engine", "html");
+app.engine("html", hbs.__express);
+app.set("views", "src/views");
+
+app.use("/static", express.static("src/public"));
+
+app.use(cookieParser(config.cookie.secret));
 
 app.use(
   session({
@@ -50,11 +67,7 @@ app.use(
   }),
 );
 
-app.set("view engine", "html");
-app.engine("html", hbs.__express);
-app.set("views", "src/views");
-
-app.use("/static", express.static("src/public"));
+app.use(flash());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
@@ -80,7 +93,11 @@ app.use((req, res) => {
 // error handler, must be last in the chain
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Internal Server Error. Something went wrong");
+  req.flash(
+    config.session.errorFlashKey,
+    err.message ?? "Something went wrong dude...",
+  );
+  res.redirect("/");
 });
 
 app.listen(config.port, () => {

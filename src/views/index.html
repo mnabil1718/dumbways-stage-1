@@ -23,14 +23,14 @@
     <title>Muhammad Nabil - Profile</title>
   </head>
   <body>
-    <navigation-bar activate="/index"></navigation-bar>
-
+	{{> navbar}}
     <main>
+      {{> flash}}
       <div class="card">
         <div class="d-flex flex-column flex-lg-row align-items-center gap-5">
           <div class="flex-lg-grow-0">
             <section id="summary">
-              <h1>Hi Welcome to my hut</h1>
+	    <h1>Hi {{#if user}} {{user.name}} {{else}} there {{/if}}</h1>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -105,6 +105,5 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="/static/scripts/components/navigation-bar.js"></script>
   </body>
 </html>

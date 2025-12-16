@@ -8,16 +8,16 @@ import { isAuthenticated, isGuest } from "../middlewares.js";
 export function registerAuthRoutes(controller) {
   const router = Router();
 
-  router.get("/login", controller.getLoginPageHandler);
+  router.get("/login", isGuest, controller.getLoginPageHandler);
 
-  router.get("/register", controller.getLoginPageHandler);
+  router.get("/register", isGuest, controller.getRegisterPageHandler);
 
   router.post("/api/register", isGuest, controller.postUserHandler);
 
   router.post("/api/login", isGuest, controller.postAuthenticationHandler);
 
   router.post(
-    "api/logout",
+    "/api/logout",
     isAuthenticated,
     controller.deleteAuthenticationHandler,
   );
