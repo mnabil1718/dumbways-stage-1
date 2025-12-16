@@ -15,22 +15,40 @@ import ProjectRepositoryPostgresql from "./repositories/postgresql/project-repos
 import TechnologyRepositoryPostgresql from "./repositories/postgresql/technology-repository.js";
 import TechnologyController from "./controllers/technology-controller.js";
 import { fallbackImageUrl } from "./helper/file.js";
+import session from "express-session";
+import Hasher from "./helper/hasher.js";
+import bcrypt from "bcrypt";
+import AuthController from "./controllers/auth-controller.js";
+import UserRepositoryPostgresql from "./repositories/postgresql/user-repository.js";
 
 const app = express();
 const pool = getPool();
 
+const passwordHasher = new Hasher(bcrypt, config.salt);
 const projectRepository = new ProjectRepositoryPostgresql(pool);
 const technologyRepository = new TechnologyRepositoryPostgresql(pool);
+const userRepository = new UserRepositoryPostgresql(pool);
+
 const technologyController = new TechnologyController(technologyRepository);
 const projectController = new ProjectController(
   projectRepository,
   technologyRepository,
 );
 const pageController = new PageController();
+const authController = new AuthController(userRepository, passwordHasher);
 
-hbs.registerHelper("toHumanReadable", toHumanReadable);
 hbs.registerHelper("dateDelta", dateDelta);
+hbs.registerHelper("toHumanReadable", toHumanReadable);
 hbs.registerHelper("fallbackImageUrl", fallbackImageUrl);
+hbs.registerPartials("src/views/partials");
+
+app.use(
+  session({
+    secret: config.session.secret,
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
 
 app.set("view engine", "html");
 app.engine("html", hbs.__express);
@@ -46,7 +64,12 @@ app.use(bodyParser.json());
 
 app.use(
   "/",
-  registerRoutes(pageController, projectController, technologyController),
+  registerRoutes(
+    authController,
+    pageController,
+    projectController,
+    technologyController,
+  ),
 );
 
 // global not found handler

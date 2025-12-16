@@ -5,8 +5,11 @@ import PageController from "../controllers/page-controller.js";
 import ProjectController from "../controllers/project-controller.js";
 import { registerTechnologyRoutes } from "./technology-routes.js";
 import TechnologyController from "../controllers/technology-controller.js";
+import { registerAuthRoutes } from "./auth-routes.js";
+import AuthController from "../controllers/auth-controller.js";
 
 /***
+ * @param {AuthController} authController
  * @param {PageController} pageController
  * @param {ProjectController} projectController
  * @param {TechnologyController} technologyController
@@ -14,6 +17,7 @@ import TechnologyController from "../controllers/technology-controller.js";
  * @returns {Router}
  */
 export function registerRoutes(
+  authController,
   pageController,
   projectController,
   technologyController,
@@ -23,6 +27,7 @@ export function registerRoutes(
   router.use("/", registerPageRoutes(pageController));
   router.use("/", registerProjectRoutes(projectController));
   router.use("/", registerTechnologyRoutes(technologyController));
+  router.use("/", registerAuthRoutes(authController));
 
   return router;
 }
