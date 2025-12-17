@@ -16,7 +16,9 @@ class ProjectController {
 
   async getProjectsPageHandler(req, res) {
     const technologies = await this.technologyRepository.getAll();
-    res.render("projects", { technologies, navItems, active: "/projects" });
+    res.locals.active = "/projects";
+    res.locals.technologies = technologies;
+    res.render("projects");
   }
 
   async getProjectDetailPageHandler(req, res) {
@@ -25,8 +27,9 @@ class ProjectController {
     if (!project) {
       res.status(404).render("404");
     }
-
-    res.render("project-detail", { project, navItems, active: "/projects" });
+    res.locals.active = "/projects";
+    res.locals.project = project;
+    res.render("project-detail");
   }
 
   async getProjectsHandler(req, res) {

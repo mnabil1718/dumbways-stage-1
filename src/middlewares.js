@@ -2,6 +2,7 @@ import multer from "multer";
 import { config } from "./helper/config.js";
 import crypto from "node:crypto";
 import path from "path";
+import { navItems } from "./helper/nav-data.js";
 
 const storage = multer.diskStorage({
   destination: "src/public/uploads",
@@ -36,4 +37,12 @@ export const isGuest = (req, res, next) => {
   }
   req.flash(config.session.flashKey, "You already authenticated");
   res.redirect("/");
+};
+
+export const setViewLocals = (req, res, next) => {
+  res.locals.error = req.flash(config.session.errorFlashKey);
+  res.locals.success = req.flash(config.session.successFlashKey);
+  res.locals.navItems = navItems;
+  res.locals.user = req.session.user;
+  next();
 };

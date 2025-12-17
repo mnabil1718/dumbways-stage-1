@@ -17,19 +17,11 @@ class AuthController {
   }
 
   async getRegisterPageHandler(req, res) {
-    res.render("register", {
-      error: req.flash(config.session.errorFlashKey),
-      success: req.flash(config.session.successFlashKey),
-      navItems,
-    });
+    res.render("register");
   }
 
   async getLoginPageHandler(req, res) {
-    res.render("login", {
-      error: req.flash(config.session.errorFlashKey),
-      success: req.flash(config.session.successFlashKey),
-      navItems,
-    });
+    res.render("login");
   }
 
   async postUserHandler(req, res) {

@@ -7,7 +7,7 @@ import "dotenv/config";
 import hbs from "hbs";
 import bodyParser from "body-parser";
 import Repository from "./repositories/sqlite/sqlite-repository.js";
-import { singleImageUploadMiddleware } from "./middlewares.js";
+import { setViewLocals, singleImageUploadMiddleware } from "./middlewares.js";
 import { dateDelta, toHumanReadable } from "./public/scripts/utils/date.js";
 import PageController from "./controllers/page-controller.js";
 import { registerPageRoutes } from "./routes/page-routes.js";
@@ -75,6 +75,7 @@ app.use(bodyParser.urlencoded());
 // parse application/json
 app.use(bodyParser.json());
 
+app.use(setViewLocals);
 app.use(
   "/",
   registerRoutes(

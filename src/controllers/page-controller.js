@@ -8,19 +8,13 @@ class PageController {
   }
 
   getIndexPageHandler(req, res) {
-    const locals = {
-      error: req.flash(config.session.errorFlashKey),
-      success: req.flash(config.session.successFlashKey),
-      navItems,
-      active: "/",
-      user: req.session.user,
-    };
-    res.render("index", locals);
+    res.locals.active = "/";
+    res.render("index");
   }
 
   getContactPageHandler(req, res) {
-    const locals = { navItems, active: "/contact", user: req.session.user };
-    res.render("contact", locals);
+    res.locals.active = "/contact";
+    res.render("contact");
   }
 }
 
