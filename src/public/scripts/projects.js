@@ -159,7 +159,7 @@ async function onSubmitHandler(e) {
 
   if (!validate(validateObj)) return;
 
-  const message = await postProject(data);
+  await postProject(data);
   resetSubmit();
   _projects = await loadProjects();
   render();
@@ -187,12 +187,11 @@ async function onSaveHandler(e) {
 
   if (!validate(validateObj)) return;
 
-  const message = await putProject(project.id, data);
+  await putProject(project.id, data);
   resetEdit();
 
   _projects = await loadProjects();
 
-  showToast(message);
   render();
 }
 
