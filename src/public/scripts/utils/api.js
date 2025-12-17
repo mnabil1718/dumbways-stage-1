@@ -10,15 +10,8 @@ class API {
       method: "POST",
       body: formData,
     });
-    if (!res.ok) {
-      console.error("POST request failed");
-      return;
-    }
 
-    const json = await res.json();
-    if (json.message) {
-      return json.message;
-    }
+    return await res.json();
   }
 
   /***
@@ -32,16 +25,7 @@ class API {
       method: "GET",
     });
 
-    if (!res.ok) {
-      console.error("GET request failed");
-      return;
-    }
-
-    const json = await res.json();
-
-    if (json.data) {
-      return json.data;
-    }
+    return await res.json();
   }
 
   /***
@@ -55,15 +39,8 @@ class API {
       method: "PUT",
       body: formData,
     });
-    if (!res.ok) {
-      console.error("PUT request failed");
-      return;
-    }
 
-    const json = await res.json();
-    if (json.message) {
-      return json.message;
-    }
+    return await res.json();
   }
 
   /***
@@ -76,15 +53,7 @@ class API {
       method: "DELETE",
     });
 
-    if (!res.ok) {
-      console.error("DELETE request failed");
-      return;
-    }
-
-    const json = await res.json();
-    if (json.message) {
-      return json.message;
-    }
+    return await res.json();
   }
 }
 

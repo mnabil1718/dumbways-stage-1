@@ -88,17 +88,15 @@ app.use(
 
 // global not found handler
 app.use((req, res) => {
-  res.render("404");
+  res.status(404).json({ success: false, message: "not found" });
 });
 
 // error handler, must be last in the chain
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  req.flash(
-    config.session.errorFlashKey,
-    err.message ?? "Something went wrong dude...",
-  );
-  res.redirect("/");
+  res
+    .status(500)
+    .json({ success: false, message: err.message ?? "Something went wrong." });
 });
 
 app.listen(config.port, () => {

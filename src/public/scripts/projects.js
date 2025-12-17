@@ -1,3 +1,4 @@
+import { showToast } from "./utils/toast.js";
 import { getUploadUrl } from "./utils/file.js";
 import {
   loadProjects,
@@ -43,18 +44,6 @@ function scrollToSection(id) {
   el.scrollIntoView({ behavior: "smooth" });
 }
 
-function showToast(message, delay = 3000) {
-  const toastEl = document.getElementById("app-toast");
-  toastEl.querySelector(".toast-body").textContent = message;
-
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, {
-    autohide: true,
-    delay,
-  });
-
-  toast.show();
-}
-
 function resetEdit() {
   form.reset();
   _editingId = null;
@@ -80,8 +69,8 @@ async function onDeleteHandler(e) {
   const project = e.detail;
 
   if (project.id === _editingId) {
-    console.error("Cannot edit project while editing");
-    alert("Cannot edit project while editing");
+    let message = "Cannot edit project while editing";
+    showToast(message, "error");
     return;
   }
 
@@ -89,9 +78,8 @@ async function onDeleteHandler(e) {
     return;
   }
 
-  const message = await deleteProjectById(project.id);
+  await deleteProjectById(project.id);
   _projects = await loadProjects();
-  showToast(message);
   render();
 }
 
@@ -139,15 +127,16 @@ function repopulateForm(project) {
 }
 
 function validate({ startDate, endDate, technology }) {
+  let message = "";
   if (new Date(startDate) > new Date(endDate)) {
-    console.error("start date has to be before end date.");
-    alert("start date has to be before end date.");
+    message = "start date has to be before end date.";
+    showToast(message, "error");
     return false;
   }
 
   if (technology.length < 1) {
-    console.error("you must choose at least 1 technology.");
-    alert("you must choose at least 1 technology.");
+    message = "you must choose at least 1 technology.";
+    showToast(message, "error");
     return false;
   }
 
@@ -172,10 +161,7 @@ async function onSubmitHandler(e) {
 
   const message = await postProject(data);
   resetSubmit();
-
   _projects = await loadProjects();
-
-  showToast(message);
   render();
 }
 

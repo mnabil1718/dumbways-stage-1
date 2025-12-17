@@ -1,10 +1,18 @@
+
 {{#if error}}
-  <div class="error-flash">
-    {{error}}
-  </div>
+  <div
+    id="flash-data"
+    data-message="{{error}}"
+    data-type="error"
+    hidden
+  ></div>
 {{/if}}
+
 {{#if success}}
-  <div class="success-flash">
-    {{success}}
-  </div>
+  <div
+    id="flash-data"
+    data-message="{{success}}"
+    data-type="success"
+    hidden
+  ></div>
 {{/if}}

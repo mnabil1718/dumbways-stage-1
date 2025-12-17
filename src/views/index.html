@@ -25,7 +25,6 @@
   <body>
 	{{> navbar}}
     <main>
-      {{> flash}}
       <div class="card">
         <div class="d-flex flex-column flex-lg-row align-items-center gap-5">
           <div class="flex-lg-grow-0">
@@ -100,10 +99,13 @@
         </div>
       </div>
     </main>
+    {{> flash}}
+    {{> toast}}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script type="module" src="/static/scripts/utils/toast.js"></script>
   </body>
 </html>

@@ -141,27 +141,8 @@
         </div>
       </div>
     </main>
-
-    <!-- TOAST -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div
-        id="app-toast"
-        class="toast align-items-center text-bg-dark"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        <div class="d-flex">
-          <div class="toast-body"></div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
-      </div>
-    </div>
+    {{> flash}}
+    {{> toast}}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
@@ -170,5 +151,6 @@
     <script type="module" src="/static/scripts/components/project-card.js"></script>
     <script type="module" src="/static/scripts/components/cancel-button.js"></script>
     <script type="module" src="/static/scripts/projects.js"></script>
+    <script type="module" src="/static/scripts/utils/toast.js"></script>
   </body>
 </html>
