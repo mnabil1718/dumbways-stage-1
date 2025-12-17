@@ -1,5 +1,7 @@
 export function showToast(message, type, delay = 3000) {
   const toastEl = document.getElementById("app-toast");
+  // reset color first
+  toastEl.classList.remove("text-bg-danger", "text-bg-dark");
 
   if (type === "error") {
     toastEl.classList.add("text-bg-danger");
