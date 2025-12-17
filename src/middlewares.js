@@ -15,7 +15,11 @@ const storage = multer.diskStorage({
     callback(null, filename);
   },
 });
-const upload = multer({ storage });
+const uploadOpts = {
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+};
+const upload = multer(uploadOpts);
 export const singleImageUploadMiddleware = upload.single("image");
 
 export const isAuthenticated = (req, res, next) => {
